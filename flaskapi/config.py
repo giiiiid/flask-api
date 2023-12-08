@@ -1,3 +1,3 @@
 class Config:
     SECRET_KEY = "f59601b41eb1dadf1baeef3c837fb445"
-    SQLALCHEMY_DATABASE_URI = "sqlite:///flask_api.db"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///flaskapi.db"

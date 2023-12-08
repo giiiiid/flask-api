@@ -3,6 +3,7 @@ from flaskapi.config import Config
 from flaskapi.main.routes import main
 from flask_sqlalchemy import SQLAlchemy
 
+# utils  configuration
 db = SQLAlchemy()
 
 def create_app(config_class=Config):
