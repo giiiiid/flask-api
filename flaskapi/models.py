@@ -1,5 +1,12 @@
 from flaskapi import db
 from datetime import datetime
+from flask import current_app
+# try:
+#     from flaskapi import create_app
+#     app = create_app()
+# except ImportError:
+#     from __main__ import create_app
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
