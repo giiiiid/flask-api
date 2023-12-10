@@ -17,13 +17,15 @@ def register():
 
     pwd_hash = bcrypt.generate_password_hash(password).decode("utf-8")
 
-    user = User(username=username, email=email, password=pwd_hash)
-    db.session.add(user)
-    db.session.commit()
+    if User.quey.filter_by(username=username).first():
+        return jsonify({"message":"Username is taken"})
+    elif User.query.filter_by(email=email).first():
+        return jsonify({"message":"Email is taken"})
+    else:
+        user = User(username=username, email=email, password=pwd_hash)
+        db.session.add(user)
+        db.session.commit()
     
-    users = User.query.all()
-    print(users)
-
     return jsonify({"message":"User created", 
                     "user":{
                         "username":username, 
