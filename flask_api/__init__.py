@@ -2,10 +2,10 @@ from flask import Flask
 from flask_api.config import Config
 from flask_api.users.routes import users
 from flask_api.models import db
-from flask_bcrypt import Bcrypt
+from flask_api.utils import bcrypt
 
 # utils  configuration
-bcrypt = Bcrypt()
+# bcrypt = Bcrypt()
 
 def create_app(config_class=Config):
     app = Flask(__name__)

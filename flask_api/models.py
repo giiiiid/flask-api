@@ -14,7 +14,7 @@ class User(db.Model):
     bookmark = db.relationship("Bookmark", backref="user", lazy=True)
 
     def __repr__(self):
-        return f'User{self.username}, {self.email}'
+        return f'User({self.username}, {self.email})'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

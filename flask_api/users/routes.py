@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify
-# from flask_api import db, bcrypt
-from flask_api.models import User
+from flask import Blueprint, request, jsonify, json
+from flask_api.utils import bcrypt
+from flask_api.models import User, db
+
 
 users = Blueprint("users", __name__)
 
@@ -14,12 +15,15 @@ def register():
     if len(username) and len(email) and len(password) < 3:
         return jsonify({"error":"Check your credentials. Some might not reach 3"}), 400
 
-    pwd_hash = bcrypt.generate_password_hash(password)
+    pwd_hash = bcrypt.generate_password_hash(password).decode("utf-8")
 
     user = User(username=username, email=email, password=pwd_hash)
-    db.sesion.add(user)
+    db.session.add(user)
     db.session.commit()
-
+    
+    users = User.query.all()
+    print(users)
+    
     return jsonify({"message":"User created", 
                     "user":{
                         "username":username, 
@@ -27,3 +31,4 @@ def register():
                         "password":pwd_hash
                     }    
                 })
+
