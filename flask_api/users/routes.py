@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, json
-from flask_api.utils import bcrypt
-from flask_api.models import User, db
+from flask_api.utils import bcrypt, db
+from flask_api.models import User
 
 
 users = Blueprint("users", __name__)
@@ -23,7 +23,7 @@ def register():
     
     users = User.query.all()
     print(users)
-    
+
     return jsonify({"message":"User created", 
                     "user":{
                         "username":username, 
