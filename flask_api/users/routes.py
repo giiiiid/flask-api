@@ -7,9 +7,9 @@ users = Blueprint("users", __name__)
 @users.route("/register", methods=["GET", "POST"])
 def register():
 
-    username = request.json["username"]
-    email = request.json["email"]
-    password = request.json["password"]
+    username = request.json.get("username")
+    email = request.json.get("email")
+    password = request.json.get("password")
     
     if len(username) and len(email) and len(password) < 3:
         return jsonify({"error":"Check your credentials. Some might not reach 3"}), 400
