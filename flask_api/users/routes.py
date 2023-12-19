@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, json
 from flask_api.utils import bcrypt, db
 from flask_api.models import User
-from flask_jwt_extended import create_refresh_token, create_access_token
+from flask_jwt_extended import create_refresh_token, create_access_token, jwt_required
 
 users = Blueprint("users", __name__)
 
@@ -55,6 +55,10 @@ def login():
         }), 200
     
     else:
-        return jsonify({"message":"Invalid credentials"}), 400
+        return jsonify({"error":"Invalid credentials"}), 400
 
 
+@users.route("/yes", methods=["GET"])
+@jwt_required
+def yes():
+    return jsonify({"message":"Welcome"})
