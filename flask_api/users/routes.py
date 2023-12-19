@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, json
+from flask import Blueprint, request, jsonify
 from flask_api.utils import bcrypt, db
 from flask_api.models import User
 
@@ -17,7 +17,7 @@ def register():
 
     pwd_hash = bcrypt.generate_password_hash(password).decode("utf-8")
 
-    if User.quey.filter_by(username=username).first():
+    if User.query.filter_by(username=username).first():
         return jsonify({"message":"Username is taken"})
     elif User.query.filter_by(email=email).first():
         return jsonify({"message":"Email is taken"})
