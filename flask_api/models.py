@@ -29,4 +29,4 @@ class Bookmark(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
 
     def __repr__(self):
-        return f'User{sellf.title}:{self.url}'
+        return f'User{self.title}:{self.url}'

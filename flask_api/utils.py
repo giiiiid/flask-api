@@ -5,6 +5,3 @@ from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
-
-
-def check_availability(data):
