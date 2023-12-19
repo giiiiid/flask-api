@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, json
 from flask_api.utils import bcrypt, db
 from flask_api.models import User
 
@@ -32,5 +32,20 @@ def register():
                         "email":email, 
                         "password":pwd_hash
                     }    
-                })
+                }), 201
+
+
+@users.route("/login", methods=["GET","POST"])
+def login():
+    username = request.json.get("username")
+    password = request.json.get("password")
+
+    user = User.query.filter_by(username=username).first()
+    hashed_pwd = bcrypt.check_password_hash(user.password, password)
+
+    if user and hashed_pwd:
+        return jsonify({"message":"Login successful"}), 200
+    else:
+        return jsonify({"message":"Invalid credentials"}), 400
+
 
