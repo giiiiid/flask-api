@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, json
 from flask_api.utils import bcrypt, db
 from flask_api.models import User
-
+from flask_jwt_extended import create_refresh_token, create_access_token
 
 users = Blueprint("users", __name__)
 
@@ -44,7 +44,16 @@ def login():
     hashed_pwd = bcrypt.check_password_hash(user.password, password)
 
     if user and hashed_pwd:
-        return jsonify({"message":"Login successful"}), 200
+        refresh = create_refresh_token(identity=user.id)
+        access = create_access_token(identity=user.id)
+        return jsonify({
+            "message":"Login successful",
+            "user":{
+                "refresh":refresh,
+                "access":access,
+            }
+        }), 200
+    
     else:
         return jsonify({"message":"Invalid credentials"}), 400
 
