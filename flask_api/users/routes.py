@@ -57,4 +57,4 @@ def login():
         })
     
     else:
-        return jsonify({"error":"Invalid credentials"}), 404
+        return jsonify({"error":"Invalid credentials"}), 400
