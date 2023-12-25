@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, json
 from flask_api.utils import bcrypt, db
 from flask_api.models import User
-from flask_jwt_extended import create_refresh_token, create_access_token
+from flask_jwt_extended import create_refresh_token, create_access_token, jwt_required, get_jwt_identity
 
 users = Blueprint("users", __name__)
 
@@ -58,3 +58,20 @@ def login():
     
     else:
         return jsonify({"error":"Invalid credentials"}), 400
+
+
+@users.route("/try", methods=["GET","POST"])
+@jwt_required()
+def try_jwt():
+    user_id = get_jwt_identity()
+
+    user = User.query.filter_by(id=user_id).first()
+    
+    if not user:
+        return jsonify({"error":"Invalid user"}), 400
+    
+    return jsonify({
+        "message":"me tried",
+        "username":user.username,
+        "email":user.email,
+    }), 200
