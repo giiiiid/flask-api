@@ -60,6 +60,7 @@ def login():
     else:
         return jsonify({"error":"Invalid credentials"}), 400
 
+
 @users.route("/try", methods=["GET","POST"])
 @jwt_required()
 def try_jwt():
