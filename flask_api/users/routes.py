@@ -46,7 +46,7 @@ def login():
     if user and hashed_pwd:
         refresh_token = create_refresh_token(identity=user.id)
         access_token = create_access_token(identity=user.id)
-        
+
         return jsonify({
             "message":"Login successfully",
             "user":{
@@ -57,4 +57,4 @@ def login():
         })
     
     else:
-        return jsonify({"message":"Invalid credentials"}), 400
+        return jsonify({"error":"Invalid credentials"}), 400
