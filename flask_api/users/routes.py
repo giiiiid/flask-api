@@ -47,5 +47,3 @@ def login():
         return jsonify({"message":"Login successful"}), 200
     else:
         return jsonify({"message":"Invalid credentials"}), 400
-
-
