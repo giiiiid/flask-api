@@ -58,21 +58,4 @@ def login():
         })
     
     else:
-        return jsonify({"error":"Invalid credentials"}), 400
-
-
-@users.route("/try", methods=["GET","POST"])
-@jwt_required()
-def try_jwt():
-    user_id = get_jwt_identity()
-
-    user = User.query.filter_by(id=user_id).first()
-    
-    if not user:
-        return jsonify({"error":"Invalid user"}), 400
-    
-    return jsonify({
-        "message":"me tried",
-        "username":user.username,
-        "email":user.email,
-    }), 200
+        return jsonify({"error":"Invalid credentials"}), 404
