@@ -6,7 +6,6 @@ import validators
 
 bookmarks = Blueprint("bookmarks", __name__)
 
-
 @bookmarks.route("/bookmarks/create-list", methods=["GET","POST"])
 @jwt_required()
 def watch_list():
@@ -33,7 +32,8 @@ def watch_list():
         }), 201
 
     else:
-        user_watchlist = Bookmark.query.filter_by(user_id=current_user)
+        page = request.args.get("page", 1, type=int)
+        user_watchlist = Bookmark.query.order_by(Bookmark.created_at).paginate(page=page, per_page=3)
         data = []
         
         for item in user_watchlist:
