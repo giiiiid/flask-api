@@ -35,9 +35,6 @@ def watch():
     else:
         user_watchlist = Bookmark.query.filter_by(user_id=current_user)
         data = []
-
-        if user_watchlist is None:
-            return jsonify("You have no watchlist")
         
         for item in user_watchlist:
             data.append({
@@ -49,4 +46,7 @@ def watch():
                 "created":item.created_at
             })
         
-        return jsonify({"watchlists":data}), 200
+        if len(data) == 0:
+            return jsonify("You have no watchlist")
+        else:
+            return jsonify({"watchlists":data}), 200
