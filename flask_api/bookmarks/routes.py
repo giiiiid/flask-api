@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, json, request
+from flask import Blueprint, jsonify, json, request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_api.models import Bookmark
 from flask_api.utils import db
@@ -53,8 +53,14 @@ def watch_list():
 
 
 @bookmarks.route("/bookmarks/<int:id>", methods=["GET","POST"])
+@jwt_required()
 def get_watchlist(id):
-    watch_vid = Bookmark.query.get_or_404(id)
+    current_user = get_jwt_identity()
+    watch_vid = Bookmark.query.filter_by(id=id, user_id=current_user).first()
+
+    if not watch_vid:
+        return jsonify({"message":"Video not found"}), 404
+    
     return jsonify({
             "id":watch_vid.id,
             "title":watch_vid.title,
@@ -63,3 +69,21 @@ def get_watchlist(id):
             "user":watch_vid.user_id,
             "created":watch_vid.created_at
         }), 200
+
+
+@bookmarks.route("/bookmarks/<int:id>/delete", methods=["GET","POST"])
+@jwt_required()
+def delete_watchlist(id):
+    current_user = get_jwt_identity()
+    watch_vid = Bookmark.query.get_or_404(id)
+
+    if watch_vid.user.id != current_user:
+        abort(403)
+
+    if not watch_vid:
+        return jsonify({"message":"Video not found"}), 404
+    
+    if request.method == "POST":
+        db.session.delete(watch_vid)
+        db.session.commit()
+        return jsonify({"message":"Video is deleted"}), 200
