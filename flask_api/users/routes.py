@@ -48,39 +48,14 @@ def login():
         access_token = create_access_token(identity=user.id)
 
         return jsonify({
-            "message":"Login successfully",
+            "message":"Login successful",
             "user":{
+                "username":user.username,
+                "email":user.email,
                 "refresh":refresh_token,
                 "access":access_token,
-                "username":username
             }
         })
     
     else:
-        return jsonify({"error":"Invalid credentials"}), 400
-
-
-@users.route("/try", methods=["GET","POST"])
-@jwt_required()
-def try_jwt():
-    user_id = get_jwt_identity()
-
-    user = User.query.filter_by(id=user_id).first()
-    
-    if not user:
-        return jsonify({"error":"Invalid user"}), 400
-    
-    return jsonify({
-        "message":"me tried",
-        "username":user.username,
-        "email":user.email,
-    }), 200
-
-
-@users.route("/user/refresh-token", methods=["GET"])
-@jwt_required(refresh=True)
-def refresh_access_token():
-    id = get_jwt_identity()
-    access = create_access_token(identity=id)
-
-    return jsonify({"access":access}), 200
+        return jsonify({"error":"Invalid credentials"}), 404
