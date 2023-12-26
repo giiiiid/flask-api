@@ -59,3 +59,18 @@ def login():
     
     else:
         return jsonify({"error":"Invalid credentials"}), 404
+
+
+@users.route("/user/try", methods=["GET","POST"])
+@jwt_required()
+def first_try():
+    return jsonify("First try works perfectly")
+
+
+@users.route("/user/refresh", methods=["GET","POST"])
+@jwt_required(refresh=True)
+def get_access_again():
+    id_token = get_jwt_identity()
+    access = create_access_token(identity=id_token)
+
+    return jsonify({"access":access})
