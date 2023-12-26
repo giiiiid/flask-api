@@ -7,9 +7,9 @@ import validators
 bookmarks = Blueprint("bookmarks", __name__)
 
 
-@bookmarks.route("/bookmarks/list", methods=["GET","POST"])
+@bookmarks.route("/bookmarks/create-list", methods=["GET","POST"])
 @jwt_required()
-def watch():
+def watch_list():
     current_user = get_jwt_identity()
 
     if request.method == "POST":
@@ -50,3 +50,16 @@ def watch():
             return jsonify("You have no watchlist")
         else:
             return jsonify({"watchlists":data}), 200
+
+
+@bookmarks.route("/bookmarks/<int:id>", methods=["GET","POST"])
+def get_watchlist(id):
+    watch_vid = Bookmark.query.get_or_404(id)
+    return jsonify({
+            "id":watch_vid.id,
+            "title":watch_vid.title,
+            "url":watch_vid.url,
+            "visits":watch_vid.visits,
+            "user":watch_vid.user_id,
+            "created":watch_vid.created_at
+        }), 200
