@@ -110,4 +110,3 @@ def users_profile(id):
                 "username":profile.username,
                 "email":profile.email
             }), 200
-    

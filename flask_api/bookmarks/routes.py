@@ -8,7 +8,7 @@ bookmarks = Blueprint("bookmarks", __name__)
 
 @bookmarks.route("/bookmarks/create-list", methods=["GET","POST"])
 @jwt_required()
-def watch_list():
+def create_view_watchlist():
     current_user = get_jwt_identity()
 
     if request.method == "POST":
@@ -54,9 +54,10 @@ def watch_list():
 
 @bookmarks.route("/bookmarks/<int:id>", methods=["GET","POST"])
 @jwt_required()
-def get_watchlist(id):
-    current_user = get_jwt_identity()
-    watch_vid = Bookmark.query.filter_by(id=id, user_id=current_user).first()
+def retrieve_watchlist(id):
+    # current_user = get_jwt_identity()
+    # watch_vid = Bookmark.query.filter_by(id=id, user_id=current_user).first()
+    watch_vid = Bookmark.query.get_or_404(id)
 
     if not watch_vid:
         return jsonify({"message":"Video not found"}), 404
@@ -67,7 +68,10 @@ def get_watchlist(id):
             "url":watch_vid.url,
             "visits":watch_vid.visits,
             "user":watch_vid.user_id,
-            "created":watch_vid.created_at
+            "created":watch_vid.created_at,
+            "user":{
+                "username":watch_vid.user.username,
+            }
         }), 200
 
 
@@ -87,3 +91,8 @@ def delete_watchlist(id):
         db.session.delete(watch_vid)
         db.session.commit()
         return jsonify({"message":"Video is deleted"}), 200
+
+
+# @bookmarks.route("/bookmarks/<int:id>/update", methods=["GET","POST"])
+# def update_watchlist(id):
+    
