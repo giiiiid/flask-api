@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify, json
 from flask_api.utils import bcrypt, db
-from flask_api.models import User
+from flask_api.models import User, Bookmark
 from flask_jwt_extended import create_refresh_token, create_access_token, jwt_required, get_jwt_identity
 
+
 users = Blueprint("users", __name__)
+
 
 @users.route("/user/register", methods=["GET", "POST"])
 def register():
@@ -74,3 +76,37 @@ def get_access_again():
     access = create_access_token(identity=id_token)
 
     return jsonify({"access":access})
+
+
+@users.route("/user/profile/<int:id>", methods=["GET","POST"])
+def users_profile(id):
+    profile = User.query.get_or_404(id)
+
+    if profile is None:
+        return jsonify({"error":"User does not exist"}), 404
+    else:
+        data = []
+        for item in profile.bookmark:
+            data.append({
+                "id":item.id,
+                "title":item.title,
+                "url":item.url,
+                "visits":item.visits,
+                "user":item.user_id,
+                "created":item.created_at
+            })
+        
+        if len(data) == 0:
+            return jsonify({
+                "username":profile.username,
+                "email":profile.email,
+                "bookmarks":"This user has 0 bookmarks"
+                }), 200
+        
+        else:
+            return jsonify({
+                "bookmarks":data,
+                "username":profile.username,
+                "email":profile.email
+            }), 200
+    
