@@ -1,6 +1,6 @@
-from flask import Blueprint, request, jsonify, json
 from flask_api.utils import bcrypt, db
 from flask_api.models import User, Bookmark
+from flask import Blueprint, request, jsonify, json
 from flask_jwt_extended import create_refresh_token, create_access_token, jwt_required, get_jwt_identity
 
 
@@ -63,15 +63,9 @@ def login():
         return jsonify({"error":"Invalid credentials"}), 404
 
 
-@users.route("/user/try", methods=["GET","POST"])
-@jwt_required()
-def first_try():
-    return jsonify("First try works perfectly")
-
-
 @users.route("/user/refresh", methods=["GET","POST"])
 @jwt_required(refresh=True)
-def get_access_again():
+def get_access_token_again():
     id_token = get_jwt_identity()
     access = create_access_token(identity=id_token)
 
@@ -79,7 +73,7 @@ def get_access_again():
 
 
 @users.route("/user/profile/<int:id>", methods=["GET","POST"])
-def users_profile(id):
+def user_profile(id):
     profile = User.query.get_or_404(id)
 
     if profile is None:

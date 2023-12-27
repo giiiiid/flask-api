@@ -1,6 +1,6 @@
-from datetime import datetime
 from flask import current_app
 from flask_api.utils import db
+from datetime import datetime
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

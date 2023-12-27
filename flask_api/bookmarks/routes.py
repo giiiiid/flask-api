@@ -1,8 +1,9 @@
+import validators
+from flask_api.utils import db
+from flask_api.models import Bookmark
 from flask import Blueprint, jsonify, json, request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_api.models import Bookmark
-from flask_api.utils import db
-import validators
+
 
 bookmarks = Blueprint("bookmarks", __name__)
 
