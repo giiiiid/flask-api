@@ -105,6 +105,7 @@ def users_profile(id):
         
         else:
             return jsonify({
+                "number of bookmarks":len(data),
                 "bookmarks":data,
                 "username":profile.username,
                 "email":profile.email
