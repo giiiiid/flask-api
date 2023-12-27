@@ -81,7 +81,7 @@ def delete_watchlist(id):
     current_user = get_jwt_identity()
     watch_vid = Bookmark.query.get_or_404(id)
 
-    if watch_vid.user.id != current_user:
+    if watch_vid.user_id != current_user:
         abort(403)
 
     if not watch_vid:
@@ -93,6 +93,44 @@ def delete_watchlist(id):
         return jsonify({"message":"Video is deleted"}), 200
 
 
-# @bookmarks.route("/bookmarks/<int:id>/update", methods=["GET","POST"])
-# def update_watchlist(id):
+@bookmarks.route("/bookmarks/<int:id>/update", methods=["GET","POST"])
+@jwt_required()
+def update_watchlist(id):
+    current_user = get_jwt_identity()
+    watch_vid = Bookmark.query.filter_by(id=id, user_id=current_user).first()
+
+    if not watch_vid:
+        return jsonify({"message":"Video not found"}), 404
     
+    if request.method == "GET":
+        return jsonify({
+            "id":watch_vid.id,
+            "title":watch_vid.title,
+            "url":watch_vid.url,
+            "visits":watch_vid.visits,
+            "user":watch_vid.user_id,
+            "created":watch_vid.created_at,
+            "user":{
+                "username":watch_vid.user.username,
+            }
+        }), 200
+
+    elif request.method == "POST":
+        title = request.json.get("title")
+        url = request.json.get("url")
+
+        watch_vid.title = title
+        watch_vid.url = url
+        db.session.commit()
+
+        return jsonify({
+            "id":watch_vid.id,
+            "title":watch_vid.title,
+            "url":watch_vid.url,
+            "visits":watch_vid.visits,
+            "user":watch_vid.user_id,
+            "updated":watch_vid.updated_at,
+            "user":{
+                "username":watch_vid.user.username,
+            }
+        }), 200
