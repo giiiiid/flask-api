@@ -122,13 +122,13 @@ def user_stat():
     
     if len(data) == 0:
         return jsonify({
-            # "message":f"Welcome {watch_vids.user.username}",
+            # "message":f"Welcome {watch_vids.user.username}",   //list has no attribute "user"
             "bookmarks":"You have 0 bookmarks"
             }), 200
     
     else:
         return jsonify({
-            # "message":f"Welcome {watch_vids.user.username}",
+            # "message":f"Welcome {watch_vids.user.username}",   ////list has no attribute "user"
             "number of bookmarks":len(data),
             "bookmarks":data,
         }), 200
