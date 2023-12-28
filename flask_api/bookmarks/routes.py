@@ -77,7 +77,7 @@ def retrieve_watchlist(id):
         }), 200
 
 
-@bookmarks.route("/bookmarks/<int:id>/update", methods=["GET","POST"])
+@bookmarks.route("/bookmarks/<int:id>/update", methods=["GET","PUT"])
 @jwt_required()
 def update_watchlist(id):
     current_user = get_jwt_identity()
@@ -99,13 +99,16 @@ def update_watchlist(id):
             }
         }), 200
 
-    elif request.method == "POST":
+    elif request.method == "PUT":
         title = request.json.get("title")
         url = request.json.get("url")
 
-        watch_vid.title = title
-        watch_vid.url = url
-        db.session.commit()
+        if not validators.url(url):
+            return jsonify({"error":"Url is not valid"}), 400
+        else:
+            watch_vid.title = title
+            watch_vid.url = url
+            db.session.commit()
 
         return jsonify({
             "id":watch_vid.id,
