@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_api.config import Config
 from flask_api.models import Bookmark
 from flask_api.utils import bcrypt, db
@@ -19,6 +19,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     bcrypt.init_app(app)
 
+
     @app.route("/<url>", methods=["GET"])
     def get_url_visits(url):
         watch_vid = Bookmark.query.filter_by(url=url).first_or_404()
@@ -26,5 +27,11 @@ def create_app(config_class=Config):
         if watch_vid:
             watch_vid.visits = watch_vid.visits+1
             db.session.commit()
+    
+    
+    @app.errorhandler(404)
+    def error_404(e):
+        return jsonify({"error":"Not found"}), 404
+    
 
     return app
