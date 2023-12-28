@@ -122,7 +122,7 @@ def user_stat():
     
     if len(data) == 0:
         return jsonify({
-            # "message":f"Welcome {watch_vid.user.username}",
+            # "message":f"Welcome {watch_vids.user.username}",
             "bookmarks":"You have 0 bookmarks"
             }), 200
     
