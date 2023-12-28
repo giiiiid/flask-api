@@ -18,8 +18,7 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     bcrypt.init_app(app)
-
-
+    
     @app.route("/<url>", methods=["GET"])
     def get_url_visits(url):
         watch_vid = Bookmark.query.filter_by(url=url).first_or_404()
