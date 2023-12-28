@@ -33,5 +33,8 @@ def create_app(config_class=Config):
     def error_404(e):
         return jsonify({"error":"Not found"}), 404
     
+    @app.errorhandler(500)
+    def error_500(e):
+        return jsonify({"error":"Something went wrong"}), 500
 
     return app
