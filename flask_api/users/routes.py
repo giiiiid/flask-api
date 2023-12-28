@@ -73,34 +73,62 @@ def get_access_token_again():
 
 
 @users.route("/user/profile/<int:id>", methods=["GET","POST"])
+@jwt_required()
 def user_profile(id):
-    profile = User.query.get_or_404(id)
+    current_user = get_jwt_identity()
+    profile = User.query.filter_by(id=current_user).first()
 
-    if profile is None:
-        return jsonify({"error":"User does not exist"}), 404
-    else:
-        data = []
-        for item in profile.bookmark:
-            data.append({
-                "id":item.id,
-                "title":item.title,
-                "url":item.url,
-                "visits":item.visits,
-                "user":item.user_id,
-                "created":item.created_at
-            })
-        
-        if len(data) == 0:
-            return jsonify({
-                "username":profile.username,
-                "email":profile.email,
-                "bookmarks":"This user has 0 bookmarks"
-                }), 200
-        
-        else:
-            return jsonify({
-                "number of bookmarks":len(data),
-                "bookmarks":data,
-                "username":profile.username,
-                "email":profile.email
+    data = []
+    for item in profile.bookmark:
+        data.append({
+            "id":item.id,
+            "title":item.title,
+            "url":item.url,
+            "visits":item.visits,
+            "user":item.user_id,
+            "created":item.created_at
+        })
+    
+    if len(data) == 0:
+        return jsonify({
+            "username":profile.username,
+            "email":profile.email,
+            "bookmarks":"This user has 0 bookmarks"
             }), 200
+    
+    else:
+        return jsonify({
+            "message":f"Welcome {profile.username}",
+            "number of bookmarks":len(data),
+            "bookmarks":data,
+        }), 200
+    
+
+@users.route("/user/stats", methods=["GET"])
+@jwt_required()
+def user_stat():
+    current_user = get_jwt_identity()
+    watch_vids = Bookmark.query.filter_by(user_id=current_user).all()
+
+    data = []
+    for item in watch_vids:
+        data.append({
+            "id":item.id,
+            "title":item.title,
+            "url":item.url,
+            "visits":item.visits,
+            "created":item.created_at
+        })
+    
+    if len(data) == 0:
+        return jsonify({
+            # "message":f"Welcome {watch_vid.user.username}",
+            "bookmarks":"You have 0 bookmarks"
+            }), 200
+    
+    else:
+        return jsonify({
+            # "message":f"Welcome {watch_vids.user.username}",
+            "number of bookmarks":len(data),
+            "bookmarks":data,
+        }), 200
