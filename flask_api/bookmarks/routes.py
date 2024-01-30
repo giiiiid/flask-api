@@ -127,7 +127,7 @@ def update_watchlist(id):
 @jwt_required()
 def delete_watchlist(id):
     current_user = get_jwt_identity()
-    watch_vid = Bookmark.query.get_or_404(id)
+    watch_vid = Bookmark.query.filter_by(id=id, user_id=current_user).first()
 
     if watch_vid.user_id != current_user:
         abort(403)
